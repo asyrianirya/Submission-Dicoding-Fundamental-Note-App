@@ -1,3 +1,5 @@
+import Utils from "./utils.js";
+
 class NoteItem extends HTMLElement {
   _shadowRoot = null;
   _style = null;
@@ -28,15 +30,23 @@ class NoteItem extends HTMLElement {
   _commonStyle = `
         :host {
           display: block;
-          border-radius: 8px;
+          border-radius: 20px;
           
           box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
           overflow: hidden;
+          transition: border-radius 0.5s;
+          height: 100%;
+        }
+        .card {
+          padding: 1rem;
+        }
+        :host(:hover){
+          border-radius: 20px 20px 0px 20px;
         }
         .note-info {
           display: flex;
           flex-direction: column;
-          padding: 1rem;
+          height: 100%;
         }
         .note-info__title h2 {
         }
@@ -45,6 +55,7 @@ class NoteItem extends HTMLElement {
         .note-info__created-at {
         }
         .note-info__archived{
+          justify-self: end;
         }
   `;
 
@@ -70,13 +81,20 @@ class NoteItem extends HTMLElement {
         background-color: aqua;
       }
       .card-empty {
+        font-size: 72px;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: gray;
         width: 100%;
         height: 100%;
         cursor: pointer;
       }
+      .card-empty(:hover) {
+      }
     `;
   }
-
   render() {
     this._emptyContent();
     this._updateStyle();
@@ -87,9 +105,7 @@ class NoteItem extends HTMLElement {
       ? (this._shadowRoot.innerHTML += `
         <div class="card ${this._emptyType ? "nonetype" : ""}">
           <div class="note-info">
-            <input type="hidden" id="${this._note.id || ""}" name="${
-          this._note.id || ""
-        }" value="${this._note.id || ""}">
+            <input type="hidden" id="${this._note.id || ""}" name="${ this._note.id || "" }" value="${this._note.id || ""}">
             <div class="note-info__title">
               <h2>${this._note.title || ""}</h2>
             </div>
@@ -108,14 +124,19 @@ class NoteItem extends HTMLElement {
       : this._updateStyleEmptyBox();
     this._shadowRoot.appendChild(this._style);
     this._shadowRoot.innerHTML += `
-        <div class="card-empty"></div>
+        <div class="card-empty">+</div>
       `;
     const emptyCard = this._shadowRoot.querySelector(".card-empty");
 
     const editListElement = document.querySelector("edit-list");
     const textNoteElement = editListElement._textNote;
-    emptyCard.addEventListener( 'click', (event) => {
+    const backStage = editListElement._backStage;
+    const formContainer = editListElement._formContainer;
+
+    emptyCard.addEventListener("click", (event) => {
       event.preventDefault();
+      Utils.showElement(backStage);
+      Utils.showElement(formContainer);
       textNoteElement.focus();
     });
   }

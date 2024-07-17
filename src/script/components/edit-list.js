@@ -39,6 +39,7 @@ class EditList extends HTMLElement {
           display: none;
           width: 100%;
           max-width: 50vw;
+          z-index: 100;
         }
           label {
            flex: 1;
@@ -50,13 +51,13 @@ class EditList extends HTMLElement {
         }
           
         button {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 10px 10px 10px 10px;
-            border: 1px solid black;
-            background-color: aqua;
-            transition: background-color 0.2s;
-            text-decoration: none;
+          padding: 10px;
+          margin: 5px;
+          border-radius: 10px 10px 10px 10px;
+          border: 1px solid black;
+          background-color: aqua;
+          transition: background-color 0.2s;
+          text-decoration: none;
         }
 
         .input-note {
@@ -85,13 +86,26 @@ class EditList extends HTMLElement {
         .isiNoteFeedback {
           color: red;
         }
-          .invalid {
-            border: 2px solid red;
-          }
-            textarea {
-            resize: vertical;
-            max-height: 5rem
-            }
+        .invalid {
+          border: 2px solid red;
+        }
+        textarea {
+        resize: vertical;
+        max-height: 5rem
+        }
+        .backStage{
+          display: none;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          position: fixed;
+          background-size: cover;
+          background-color: rgba(0,0,0,0.2);
+          z-index = 99;
+        }
         `;
   }
 
@@ -100,8 +114,13 @@ class EditList extends HTMLElement {
   }
 
   get _formContainer() {
-    return this._shadowRoot.getElementById("form-container");
+    return this._shadowRoot.getElementById("form");
   }
+
+  get _backStage(){
+    return this._shadowRoot.querySelector(".backStage");
+  }
+
 
   render() {
     this._emptyContent();
@@ -114,6 +133,7 @@ class EditList extends HTMLElement {
             <div class="action-container">
                 <button id="edit">EDIT</button>
             </div>
+            <div class="backStage"></div>
             <div id="form" class="form-container">
                 <form>
                 <div class="title">
@@ -140,12 +160,14 @@ class EditList extends HTMLElement {
 
         `;
     const editButton = this._shadowRoot.getElementById("edit");
+    const backStage = this._shadowRoot.querySelector(".backStage");
+
     const formContainer = this._shadowRoot.getElementById("form");
     const submitNote = this._shadowRoot.getElementById("submit-note");
+
     const judulNote = this._shadowRoot.getElementById("judul-note");
     const judulNoteWord = this._shadowRoot.querySelector(".judul-note-word");
-    const judulNoteFeedback =
-      this._shadowRoot.querySelector(".judulNoteFeedback");
+    const judulNoteFeedback = this._shadowRoot.querySelector(".judulNoteFeedback");
 
     const isiNote = this._shadowRoot.getElementById("isi-note");
     const isiNoteFeedback = this._shadowRoot.querySelector(".isiNoteFeedback");
@@ -153,7 +175,13 @@ class EditList extends HTMLElement {
 
     editButton.addEventListener("click", () => {
       Utils.toggleHideElement(formContainer);
+      Utils.showElement(backStage);
     });
+
+    backStage.addEventListener('click' ,() => {
+      Utils.hideElement(backStage);
+      Utils.hideElement(formContainer);
+    })
 
     const validateInput = (
       inputElement,

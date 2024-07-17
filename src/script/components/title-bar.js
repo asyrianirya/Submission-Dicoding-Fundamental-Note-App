@@ -20,7 +20,7 @@ class TitleBar extends HTMLElement {
             display: block;
             background-color: aqua;
             padding: 1.5rem;
-            border-bottom: 5px solid black;
+            border: 5px solid black;
         }
   
         div {

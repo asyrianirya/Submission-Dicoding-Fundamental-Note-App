@@ -5,3 +5,4 @@ import './note-list.js';
 import './note-item.js';
 
 import './edit-list.js';
+import './footer-bar.js';

@@ -219,12 +219,14 @@ class EditList extends HTMLElement {
     const judulNoteMaxLength = parseInt(
       Utils.getElementAttribute(judulNote, "maxlength")
     );
+    judulNoteWord.innerHTML = `0/${judulNoteMaxLength}`;
     const isiNoteMinLength = parseInt(
       Utils.getElementAttribute(isiNote, "minlength")
     );
     const isiNoteMaxLength = parseInt(
       Utils.getElementAttribute(isiNote, "maxlength")
     );
+    isiNoteWord.innerHTML = `0/${isiNoteMaxLength}`;
 
     validateInput(
       judulNote,
